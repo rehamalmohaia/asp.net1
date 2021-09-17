@@ -1,0 +1,35 @@
+protected void BtnPrintOrdera(object sender, EventArgs e)
+    {
+       
+
+            Telerik.Reporting.Processing.ReportProcessor reportProcessor = new Telerik.Reporting.Processing.ReportProcessor();
+            // set any deviceInfo settings if necessary
+            System.Collections.Hashtable deviceInfo =
+                new System.Collections.Hashtable();
+
+            var uriReportSource = new Telerik.Reporting.UriReportSource();
+
+           
+            uriReportSource.Uri = @"Print\INDEX1.trdp";
+            uriReportSource.Parameters.Add(new Telerik.Reporting.Parameter("Text1", "HELLO"));
+            uriReportSource.Parameters.Add(new Telerik.Reporting.Parameter("Text5", RadTextBox1.Text));
+            uriReportSource.Parameters.Add(new Telerik.Reporting.Parameter("Text2", RadTextBox2.Text));
+            uriReportSource.Parameters.Add(new Telerik.Reporting.Parameter("Text3", RadTextBox3.Text));
+            uriReportSource.Parameters.Add(new Telerik.Reporting.Parameter("Text4", RadTextBox4.Text));
+            uriReportSource.Parameters.Add(new Telerik.Reporting.Parameter("Text6", txtDetails.Text));
+
+        Telerik.Reporting.Processing.RenderingResult result =
+        reportProcessor.RenderReport("PDF", uriReportSource, deviceInfo);
+        string fileName = "الفهرس"  + result.Extension;
+     
+        Response.Clear();
+        Response.ContentType = "application/pdf";
+        Response.AppendHeader("Content-Disposition", "attachment; filename=file.pdf");
+        Response.BufferOutput = true;
+        Response.AddHeader("content-disposition", "attachment; filename=" + Guid.NewGuid() + ".pdf");
+        Response.OutputStream.Write(result.DocumentBytes, 0, result.DocumentBytes.Length);
+     
+       
+        Response.Flush();
+        Response.End();
+        }
